@@ -51,6 +51,23 @@ const decode = (rawData) => {
 }
 
 /**
+ *  Reverse row
+ * @param row
+ * @returns {*}
+ */
+const flipRow = (row) => {
+  const pixel = Buffer.alloc(3)
+
+  for (let i = 0, j = row.length; (i < row.length / 2) && (j > row.length / 2); i += 3, j -= 3) {
+    row.copy(pixel, 0, j - 3, j)
+    row.copy(row, j - 3, i, i + 3)
+    pixel.copy(row, i, 0, 3)
+  }
+
+  return row
+}
+
+/**
  * Vertically reflect image data
  * @param data
  * @param rowSize
@@ -59,22 +76,11 @@ const decode = (rawData) => {
  */
 
 const verticallyReflect = (data, rowSize, rows) => {
-  const temp = []
-
   for (let i = 0; i < rows; i += 1) {
-    const buf = Buffer.alloc(rowSize)
-    const row = data.slice((i * rowSize), (i + 1) * rowSize)
-
-    for (let j = 0; j < rowSize; j += 3) {
-      const pixel = row.slice(j, j + 3)
-
-      buf.write(pixel.toString('hex'), rowSize - j - 3, 3, 'hex')
-    }
-
-    temp.push(buf)
+    flipRow(data.subarray(i * rowSize, (i + 1) * rowSize))
   }
 
-  return Buffer.concat(temp, data.length)
+  return data
 }
 
 /**
@@ -103,4 +109,7 @@ const convert = (rawData) => {
   })
 }
 
-module.exports = convert
+module.exports = {
+  convert,
+  flipRow
+}
