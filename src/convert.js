@@ -16,7 +16,18 @@ const decodeFileHeader = (fileHeaderBuff) => {
 /**
  * * Decode dibHeader
  * @param {Buffer} dibHeaderBuff - 40 to 128 bytes input buffer with offset 14
- * @returns {Object} {{size: number, totalColors: number, bitsPerPixel: number, width: number, planes: number, importantColors: number, imageSize: number, compression: number, height: number}}
+ * @returns {Object} {{
+ *    size: number,
+ *    totalColors: number,
+ *    bitsPerPixel: number,
+ *    width: number,
+ *    planes: number,
+ *    importantColors: number,
+ *    imageSize: number,
+ *    compression: number,
+ *    height: number
+ * }}
+ *
  */
 const decodeDIBHeader = (dibHeaderBuff) => {
   return {
@@ -35,7 +46,7 @@ const decodeDIBHeader = (dibHeaderBuff) => {
 /**
  * Parse headers and imageData to object from rawData
  * @param {Buffer} rawData - read from file
- * @returns {Object} {{image: Buffer, dibHeader: {size: number, totalColors: number, bitsPerPixel: number, width: number, planes: number, importantColors: number, imageSize: number, compression: number, height: number}, fileHeader: {size: number, offset: number, type: string}}}
+ * @returns {Object} {{image: Buffer, dibHeader: {Object} , fileHeader: {Object}}}
  */
 const decode = (rawData) => {
   const fileHeader = decodeFileHeader(rawData.slice(0, FILE_HEADER_SIZE))

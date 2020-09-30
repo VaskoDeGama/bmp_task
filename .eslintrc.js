@@ -8,9 +8,6 @@ module.exports = {
     },
     'sourceType': 'module'
   },
-  extends: [
-  ],
-
   'env': {
     'es6': true,
     'node': true,
@@ -218,5 +215,6 @@ module.exports = {
     'standard/computed-property-even-spacing': ['error', 'even'],
     'standard/no-callback-literal': 'error',
     'standard/object-curly-even-spacing': ['error', 'either']
+
   }
 }
