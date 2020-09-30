@@ -2,24 +2,56 @@ const fs = require('fs').promises
 const path = require('path')
 const { convert, flipRow } = require('./../src/convert')
 
+jest.setTimeout(900000)
+
 describe('bmp convert', () => {
-  test('convert well square file', async () => {
+  test('convert small square file', async () => {
     const inputPath = path.join(__dirname, '../', 'assets/', 'input.bmp')
     const samplePath = path.join(__dirname, '../', 'dist/', '__tests___assets_output.bmp')
+    const outputPath = path.join(__dirname, '../', 'dist/', 'output.bmp')
     const inputBuff = await fs.readFile(inputPath)
-    const result = await convert(inputBuff)
     const sample = await fs.readFile(samplePath)
 
-    expect(sample).toStrictEqual(result)
+    const result = await convert(inputBuff)
+
+    await fs.writeFile(outputPath, result)
+    expect(Buffer.compare(result, sample)).toStrictEqual(0)
   })
-  test('convert well square file', async () => {
-    const inputPath = path.join(__dirname, '../', 'assets/', 'input.bmp')
-    const samplePath = path.join(__dirname, '../', 'dist/', '__tests___assets_output.bmp')
+  test('convert 30mb ', async () => {
+    const inputPath = path.join(__dirname, '../', 'assets/', 'kekasic.bmp')
+    const samplePath = path.join(__dirname, '../', 'dist/', '__test__kekasic_output.bmp')
+    const outputPath = path.join(__dirname, '../', 'dist/', 'kekasic_output.bmp')
     const inputBuff = await fs.readFile(inputPath)
-    const result = await convert(inputBuff)
     const sample = await fs.readFile(samplePath)
 
-    expect(sample).toStrictEqual(result)
+    const result = await convert(inputBuff)
+
+    await fs.writeFile(outputPath, result)
+    expect(Buffer.compare(result, sample)).toStrictEqual(0)
+  })
+  test('convert 80mb', async () => {
+    const inputPath = path.join(__dirname, '../', 'assets/', 'big.bmp')
+    const samplePath = path.join(__dirname, '../', 'dist/', '__tests___big_output.bmp')
+    const outputPath = path.join(__dirname, '../', 'dist/', 'big_output.bmp')
+    const inputBuff = await fs.readFile(inputPath)
+    const sample = await fs.readFile(samplePath)
+
+    const result = await convert(inputBuff)
+
+    await fs.writeFile(outputPath, result)
+    expect(Buffer.compare(result, sample)).toStrictEqual(0)
+  })
+  test('convert 300mb', async () => {
+    const inputPath = path.join(__dirname, '../', 'assets/', 'big2.bmp')
+    const samplePath = path.join(__dirname, '../', 'dist/', '__tests___big2_output.bmp')
+    const outputPath = path.join(__dirname, '../', 'dist/', 'big2_output.bmp')
+    const inputBuff = await fs.readFile(inputPath)
+    const sample = await fs.readFile(samplePath)
+
+    const result = await convert(inputBuff)
+
+    await fs.writeFile(outputPath, result)
+    expect(Buffer.compare(result, sample)).toStrictEqual(0)
   })
 })
 

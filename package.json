@@ -4,7 +4,7 @@
   "description": "'Task with callback'",
   "main": "index.js",
   "scripts": {
-    "run": "node ./src/index.js ./assets/input.bmp  ./dist/output.bmp",
+    "run": "node ./src/index.js ./assets/kekasic.bmp  ./dist/kekasic.bmp",
     "lint": "eslint --fix",
     "test": "jest --coverage",
     "dev": "jest --watch"
