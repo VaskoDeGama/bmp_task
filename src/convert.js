@@ -1,9 +1,17 @@
 const FILE_HEADER_SIZE = 14
 
 /**
+ * Parsed bmp file header
+ * @typedef {Object} fileHeader
+ * @property {number} size - The size of the BMP file in bytes
+ * @property {number} offset - starting address, of the byte where the pixel array can be found
+ * @property {string} type - same as BM in ASCII
+ */
+
+/**
  * Decode bmp file header
  * @param {Buffer} fileHeaderBuff - the first 14 bytes of the input buffer
- * @returns {Object} {{size: number, offset: number, type: string}} decoded file header
+ * @returns {fileHeader} decoded file header
  */
 const decodeFileHeader = (fileHeaderBuff) => {
   return {
@@ -12,22 +20,24 @@ const decodeFileHeader = (fileHeaderBuff) => {
     offset: fileHeaderBuff.readUInt32LE(10)
   }
 }
+/**
+ * Parsed bmp file dib header
+ * @typedef {Object} dibHeader
+ * @property {number} size - the size of this header, in bytes
+ * @property {number} totalColors - the number of colors in the color palette, or 0 to default to 2n
+ * @property {number} bitsPerPixel - the number of bits per pixel
+ * @property {number} width - the bitmap width in pixels
+ * @property {number} planes - the number of color planes, 1
+ * @property {number} importantColors - the number of important colors used, or 0 when every color is important
+ * @property {number} imageSize - the image size in bytes
+ * @property {number} compression - the compression method being used
+ * @property {number} height - the bitmap height in pixels
+ */
 
 /**
  * * Decode dibHeader
  * @param {Buffer} dibHeaderBuff - 40 to 128 bytes input buffer with offset 14
- * @returns {Object} {{
- *    size: number,
- *    totalColors: number,
- *    bitsPerPixel: number,
- *    width: number,
- *    planes: number,
- *    importantColors: number,
- *    imageSize: number,
- *    compression: number,
- *    height: number
- * }}
- *
+ * @returns {dibHeader} decoded dib header
  */
 const decodeDIBHeader = (dibHeaderBuff) => {
   return {
@@ -44,9 +54,17 @@ const decodeDIBHeader = (dibHeaderBuff) => {
 }
 
 /**
+ * Decoded data object
+ * @typedef {Object} decodedData
+ * @property {fileHeader} fileHeader - the image size in bytes
+ * @property {dibHeader} dibHeader - the compression method being used
+ * @property {Buffer} image - the bitmap height in pixels
+ */
+
+/**
  * Parse headers and imageData to object from rawData
  * @param {Buffer} rawData - read from file
- * @returns {Object} {{image: Buffer, dibHeader: {Object} , fileHeader: {Object}}}
+ * @returns {decodedData} decoded data
  */
 const decode = (rawData) => {
   const fileHeader = decodeFileHeader(rawData.slice(0, FILE_HEADER_SIZE))
@@ -110,9 +128,7 @@ const convert = (rawData) => {
 
       const rowSize = data.image.length / data.dibHeader.height
 
-      console.time('verticallyReflect')
       verticallyReflect(data.image, rowSize, data.dibHeader.height)
-      console.timeEnd('verticallyReflect')
       resolve(rawData)
     } catch (e) {
       reject(e)

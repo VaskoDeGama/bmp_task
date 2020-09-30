@@ -2,6 +2,10 @@ const fs = require('fs').promises
 const path = require('path')
 const { convert } = require('./convert')
 
+/**
+ * Read, convert and save file
+ * @returns {Promise<void>}
+ */
 const main = async () => {
   const [inputArg, outputArg] = process.argv.splice(2, 2)
   const inputFile = path.parse(inputArg)
