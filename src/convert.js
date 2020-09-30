@@ -95,14 +95,9 @@ const convert = (rawData) => {
 
       const rowSize = data.image.length / data.dibHeader.height
 
-      const resultBuffer = verticallyReflect(data.image, rowSize, data.dibHeader.height)
+      verticallyReflect(data.image, rowSize, data.dibHeader.height)
 
-      const result = Buffer.alloc(rawData.length)
-
-      rawData.copy(result, 0, 0, data.fileHeader.offset)
-      resultBuffer.copy(result, data.fileHeader.offset, 0, data.image.length)
-
-      resolve(result)
+      resolve(rawData)
     } catch (e) {
       reject(e)
     }
