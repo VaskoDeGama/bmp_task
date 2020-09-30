@@ -1,6 +1,6 @@
 const fs = require('fs').promises
 const path = require('path')
-const convert = require('./convert')
+const { convert } = require('./convert')
 
 const main = async () => {
   const [inputArg, outputArg] = process.argv.splice(2, 2)

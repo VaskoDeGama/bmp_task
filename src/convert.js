@@ -12,6 +12,11 @@ const decodeFileHeader = (fileHeaderBuff) => {
   }
 }
 
+/**
+ * Decode dibHeader
+ * @param dibHeaderBuff
+ * @returns {{size: number, totalColors: number, bitsPerPixel: number, width: number, planes: number, importantColors: number, imageSize: number, compression: number, height: number}}
+ */
 const decodeDIBHeader = (dibHeaderBuff) => {
   return {
     size: dibHeaderBuff.readUInt16LE(0),
@@ -46,7 +51,6 @@ const decode = (rawData) => {
     fileHeader,
     dibHeader,
     image
-
   }
 }
 
@@ -74,7 +78,6 @@ const flipRow = (row) => {
  * @param rows
  * @returns {*|void|Promise<string[]>|this|Uint8Array|this|Uint16Array|Int16Array|Float32Array|Uint8ClampedArray|Int32Array|Int8Array|Float64Array|this|any[]|Uint32Array}
  */
-
 const verticallyReflect = (data, rowSize, rows) => {
   for (let i = 0; i < rows; i += 1) {
     flipRow(data.subarray(i * rowSize, (i + 1) * rowSize))
@@ -95,14 +98,9 @@ const convert = (rawData) => {
 
       const rowSize = data.image.length / data.dibHeader.height
 
-      const resultBuffer = verticallyReflect(data.image, rowSize, data.dibHeader.height)
+      verticallyReflect(data.image, rowSize, data.dibHeader.height)
 
-      const result = Buffer.alloc(rawData.length)
-
-      rawData.copy(result, 0, 0, data.fileHeader.offset)
-      resultBuffer.copy(result, data.fileHeader.offset, 0, data.image.length)
-
-      resolve(result)
+      resolve(rawData)
     } catch (e) {
       reject(e)
     }
