@@ -1,7 +1,7 @@
 {
-  "name": "calculate_task",
+  "name": "bmp_task",
   "version": "1.0.0",
-  "description": "'Task with callback'",
+  "description": "'Task: bmp convert'",
   "main": "index.js",
   "scripts": {
     "run": "node ./src/index.js ./assets/kekasic.bmp  ./dist/kekasic.bmp",
@@ -11,21 +11,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/VaskoDeGama/cb_task.git"
+    "url": "git+https://github.com/VaskoDeGama/bmp_task.git"
   },
   "keywords": [
-    "no",
-    "promise",
-    "callback",
     "functions",
-    "array"
+    "array",
+    "buffer",
+    "node",
+    "bmp"
   ],
   "author": "Vasiliy Kamenyuk <karmenyuk@yandex.ru>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/VaskoDeGama/cb_task/issues"
+    "url": "https://github.com/VaskoDeGama/bmp_task/issues"
   },
-  "homepage": "https://github.com/VaskoDeGama/cb_task#readme",
+  "homepage": "https://github.com/VaskoDeGama/bmp_task#readme",
   "devDependencies": {
     "eslint": "latest",
     "eslint-friendly-formatter": "latest",
