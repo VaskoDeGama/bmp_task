@@ -107,13 +107,14 @@ const flipRow = (row) => {
 /**
  * Vertically reflect image data
  * @param {Buffer} data - Pixel array from raw data
- * @param {Number} rowSize - length of one row
- * @param {Number} rows - number of row
+ * @param {number} rowSize - length of one row
+ * @param {number} rows - number of row
+ * @param {number} fillingBytes - number of zero-filled bytes
  * @returns {Buffer}  pixel array from raw data after transform
  */
-const verticallyReflect = (data, rowSize, rows) => {
+const verticallyReflect = (data, rowSize, rows, fillingBytes) => {
   for (let i = 0; i < rows; i += 1) {
-    const row = data.slice(i * rowSize, (i + 1) * rowSize)
+    const row = data.slice(i * rowSize, (i + 1) * rowSize - fillingBytes)
 
     flipRow(row)
   }
@@ -135,9 +136,10 @@ const convert = (rawData) => {
       console.log(data)
 
       const rowSize = data.image.length / data.dibHeader.height
+      const fillingBytes = rowSize - data.dibHeader.height * 3
 
       console.time()
-      verticallyReflect(data.image, rowSize, data.dibHeader.height)
+      verticallyReflect(data.image, rowSize, data.dibHeader.height, fillingBytes)
       console.timeEnd()
 
       resolve(rawData)

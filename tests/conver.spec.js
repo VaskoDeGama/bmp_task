@@ -29,6 +29,18 @@ describe('bmp convert', () => {
     await fs.writeFile(outputPath, result)
     expect(Buffer.compare(result, sample)).toStrictEqual(0)
   })
+  test('not div on 4', async () => {
+    const inputPath = path.join(__dirname, '../', 'assets/', 'notdiv4.bmp')
+    const samplePath = path.join(__dirname, '../', 'dist/', '__test___notdiv4_output.bmp')
+    const outputPath = path.join(__dirname, '../', 'dist/', 'notdiv4_output.bmp')
+    const inputBuff = await fs.readFile(inputPath)
+    const sample = await fs.readFile(samplePath)
+
+    const result = await convert(inputBuff)
+
+    await fs.writeFile(outputPath, result)
+    expect(Buffer.compare(result, sample)).toStrictEqual(0)
+  })
   test('convert 30mb ', async () => {
     const inputPath = path.join(__dirname, '../', 'assets/', 'kekasic.bmp')
     const samplePath = path.join(__dirname, '../', 'dist/', '__test__kekasic_output.bmp')
