@@ -14,8 +14,14 @@ const FILE_HEADER_SIZE = 14
  * @returns {fileHeader} decoded file header
  */
 const decodeFileHeader = (fileHeaderBuff) => {
+  const type = fileHeaderBuff.slice(0, 2).toString()
+
+  if (type !== 'BM') {
+    throw new Error('InvalidImageError')
+  }
+
   return {
-    type: fileHeaderBuff.slice(0, 2).toString(),
+    type,
     size: fileHeaderBuff.readUInt32LE(2),
     offset: fileHeaderBuff.readUInt32LE(10)
   }
@@ -126,9 +132,14 @@ const convert = (rawData) => {
     try {
       const data = decode(rawData)
 
+      console.log(data)
+
       const rowSize = data.image.length / data.dibHeader.height
 
+      console.time()
       verticallyReflect(data.image, rowSize, data.dibHeader.height)
+      console.timeEnd()
+
       resolve(rawData)
     } catch (e) {
       reject(e)

@@ -5,6 +5,18 @@ const { convert, flipRow } = require('./../src/convert')
 jest.setTimeout(900000)
 
 describe('bmp convert', () => {
+  test('error test not bmp', async () => {
+    const inputPath = path.join(__dirname, '../', 'assets/', 'BMPfileFormat.png')
+    const inputBuff = await fs.readFile(inputPath)
+
+    expect.assertions(1)
+
+    try {
+      await convert(inputBuff)
+    } catch (e) {
+      expect(e.message).toEqual('InvalidImageError')
+    }
+  })
   test('convert small square file', async () => {
     const inputPath = path.join(__dirname, '../', 'assets/', 'input.bmp')
     const samplePath = path.join(__dirname, '../', 'dist/', '__tests___assets_output.bmp')
