@@ -136,8 +136,10 @@ const convert = (rawData) => {
       console.log(data)
 
       const rowSize = data.image.length / data.dibHeader.height
-      const fillingBytes = rowSize - data.dibHeader.height * 3
+      const bytesInRow = data.dibHeader.height * 3
+      const fillingBytes = bytesInRow % 4 ? rowSize - bytesInRow : 0
 
+      console.log(rowSize, fillingBytes)
       console.time()
       verticallyReflect(data.image, rowSize, data.dibHeader.height, fillingBytes)
       console.timeEnd()
