@@ -58,12 +58,39 @@ const decodeDIBHeader = (dibHeaderBuff) => {
     importantColors: dibHeaderBuff.readUInt32LE(36)
   }
 }
+/**
+ * Row Information
+ * @typedef {Object} rowInfo
+ * @property {number} rowSize - row size in bytes
+ * @property {number} bytesInRow - bytes in row without felling
+ * @property {number} fillingBytes - filling bytes or 0
+ */
+
+/**
+ * Compute row information
+ * @param {number} imgLength - img length in bytes
+ * @param {number} imgHeight - img height in pixel
+ * @param {number} imgWidth - img width in pixel
+ * @returns {rowInfo} computed row Information
+ */
+const getRowInfo = (imgLength, imgHeight, imgWidth) => {
+  const rowSize = imgLength / imgHeight
+  const bytesInRow = imgWidth * 3
+  const fillingBytes = bytesInRow % 4 ? rowSize - bytesInRow : 0
+
+  return {
+    rowSize,
+    bytesInRow,
+    fillingBytes
+  }
+}
 
 /**
  * Decoded data object
  * @typedef {Object} decodedData
  * @property {fileHeader} fileHeader - the image size in bytes
  * @property {dibHeader} dibHeader - the compression method being used
+ * @property {rowInfo} rowInfo - information about row
  * @property {Buffer} image - the bitmap height in pixels
  */
 
@@ -77,12 +104,13 @@ const decode = (rawData) => {
 
   const dibHeaderSize = rawData.readUInt32LE(14)
   const dibHeader = decodeDIBHeader(rawData.slice(FILE_HEADER_SIZE, dibHeaderSize))
-
+  const rowInfo = getRowInfo(dibHeader.imageSize, dibHeader.height, dibHeader.width)
   const image = rawData.slice(fileHeader.offset, dibHeader.imageSize + fileHeader.offset)
 
   return {
     fileHeader,
     dibHeader,
+    rowInfo,
     image
   }
 }
@@ -134,15 +162,7 @@ const convert = (rawData) => {
       const data = decode(rawData)
 
       console.log(data)
-
-      const rowSize = data.image.length / data.dibHeader.height
-      const bytesInRow = data.dibHeader.height * 3
-      const fillingBytes = bytesInRow % 4 ? rowSize - bytesInRow : 0
-
-      console.log(rowSize, fillingBytes)
-      console.time()
-      verticallyReflect(data.image, rowSize, data.dibHeader.height, fillingBytes)
-      console.timeEnd()
+      verticallyReflect(data.image, data.rowInfo.rowSize, data.dibHeader.height, data.rowInfo.fillingBytes)
 
       resolve(rawData)
     } catch (e) {
@@ -153,5 +173,8 @@ const convert = (rawData) => {
 
 module.exports = {
   convert,
-  flipRow
+  flipRow,
+  decodeFileHeader,
+  decodeDIBHeader,
+  getRowInfo
 }

@@ -53,6 +53,18 @@ describe('bmp convert', () => {
     await fs.writeFile(outputPath, result)
     expect(Buffer.compare(result, sample)).toStrictEqual(0)
   })
+  test('convert height file', async () => {
+    const inputPath = path.join(__dirname, '../', 'assets/', 'heidth.bmp')
+    const samplePath = path.join(__dirname, '../', 'dist/', '__tests___heidth_output.bmp')
+    const outputPath = path.join(__dirname, '../', 'dist/', 'heidth.bmp')
+    const inputBuff = await fs.readFile(inputPath)
+    const sample = await fs.readFile(samplePath)
+
+    const result = await convert(inputBuff)
+
+    await fs.writeFile(outputPath, result)
+    expect(Buffer.compare(result, sample)).toStrictEqual(0)
+  })
   test('convert 80mb', async () => {
     const inputPath = path.join(__dirname, '../', 'assets/', 'big.bmp')
     const samplePath = path.join(__dirname, '../', 'dist/', '__tests___big_output.bmp')
